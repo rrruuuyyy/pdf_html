@@ -33,11 +33,13 @@ videoQueue.process(800,async(job)=>{
       bottom: "0px"
     }
   });
+  console.log('Apenas vamos a crear el pdf')
   await browser.close();
   // res.end(buffer);
   fs.writeFileSync(`./docs/${name}.pdf`, buffer, (err) => {
     console.log('Html mal formado')
   });
+  console.log('Ya se creo el pedf')
   return Promise.resolve({doc_name:name})
 });
 // parse requests of content-type - application/json
