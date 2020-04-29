@@ -15,7 +15,7 @@ app.use(cors())
 
 //Seteo el nombre del proceso
 // let workQueue = new Queue('html_pdf', REDIS_URL);
-var videoQueue = new Queue('video transcoding', REDIS_URL);
+var videoQueue = new Queue('video transcoding', {redis: {port: 16589, host: 'ec2-18-206-138-40.compute-1.amazonaws.com', password: 'pd94a96ccd1cccf7944f99cf83cfbffa71ff6d3b3e58dc8dc95ae7a356a70aa96'}});
 videoQueue.process(800,async(job)=>{
   const name = Date.now();
   console.log(name)
