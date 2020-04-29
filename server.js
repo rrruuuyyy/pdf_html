@@ -18,7 +18,6 @@ app.use(cors())
 var videoQueue = new Queue('video transcoding', {redis: {port: 16589, host: 'ec2-18-206-138-40.compute-1.amazonaws.com', password: 'pd94a96ccd1cccf7944f99cf83cfbffa71ff6d3b3e58dc8dc95ae7a356a70aa96'}});
 videoQueue.process(800,async(job)=>{
   const name = Date.now();
-  console.log(name)
   const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   console.log('Estamos dentro de puppeter')
   const page = await browser.newPage();
@@ -33,11 +32,8 @@ videoQueue.process(800,async(job)=>{
       bottom: "0px"
     }
   });
-  console.log(buffer)
   console.log('Apenas vamos a crear el pdf')
   await browser.close();
-  // res.end(buffer);
-  console.log('Estamos creando el archivo')
   fs.writeFileSync(`${name}.pdf`, buffer, (err) => {
     console.log('Html mal formado')
   });
@@ -62,7 +58,7 @@ app.post("/html_pdf", async (req, res) => {
   await videoQueue.add({doc:html});
   // videoQueue.add(req.body);
   await videoQueue.on('completed', async (job, result) => {
-    console.log('Se creo el documento')
+    console.log(`Se creo el domcumento: ${result.doc_name}`)
     var path = `${result.doc_name}.pdf`;
     var file = await fs.readFileSync(path);
     // await fs.unlinkSync(path);
@@ -73,38 +69,7 @@ app.post("/html_pdf", async (req, res) => {
     res.end(file)
   })
   
-  // res.status(200).json(respu);
-  // let job = await workQueue.add(req.body);
-  // var html = req.body;
-  // console.log(req.body);
-  // ( async() => { 
-  //   const browser = await puppeteer.launch({ headless: true });
-  //   const page = await browser.newPage();
-  //   await page.setContent(html);
-  //   const buffer = await page.pdf({
-  //     format: "A4",
-  //     printBackground: true,
-  //     margin: {
-  //       left: "0px",
-  //       top: "0px",
-  //       right: "0px",
-  //       bottom: "0px"
-  //     }
-  //   });
-  //   await browser.close();
-  //   res.end(buffer);  
-  //   })();
 });
-
-// async function printPDF() {
-//   const browser = await puppeteer.launch({ headless: true });
-//   const page = await browser.newPage();
-//   await page.goto('https://google.com', {waitUntil: 'networkidle0'});
-//   const pdf = await page.pdf({ format: 'A4' });
- 
-//   await browser.close();
-//   return pdf
-// })
 
 require("./app/routes/customer.routes.js")(app);
 
