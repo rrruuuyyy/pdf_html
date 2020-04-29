@@ -33,10 +33,12 @@ videoQueue.process(800,async(job)=>{
       bottom: "0px"
     }
   });
+  console.log(buffer)
   console.log('Apenas vamos a crear el pdf')
   await browser.close();
   // res.end(buffer);
-  fs.writeFileSync(`./docs/${name}.pdf`, buffer, (err) => {
+  console.log('Estamos creando el archivo')
+  fs.writeFileSync(`${name}.pdf`, buffer, (err) => {
     console.log('Html mal formado')
   });
   console.log('Ya se creo el pedf')
@@ -60,7 +62,8 @@ app.post("/html_pdf", async (req, res) => {
   await videoQueue.add({doc:html});
   // videoQueue.add(req.body);
   await videoQueue.on('completed', async (job, result) => {
-    var path = `docs/${result.doc_name}.pdf`;
+    console.log('Se creo el documento')
+    var path = `${result.doc_name}.pdf`;
     var file = await fs.readFileSync(path);
     // await fs.unlinkSync(path);
     res.setHeader('Content-Type', 'application/pdf');
