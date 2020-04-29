@@ -20,6 +20,7 @@ videoQueue.process(800,async(job)=>{
   const name = Date.now();
   console.log(name)
   const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  console.log('Estamos dentro de puppeter')
   const page = await browser.newPage();
   await page.setContent(job.data.doc);
   const buffer = await page.pdf({
