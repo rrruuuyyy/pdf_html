@@ -19,7 +19,7 @@ var videoQueue = new Queue('video transcoding', {redis: {port: 16589, host: 'ec2
 videoQueue.process(800,async(job)=>{
   const name = Date.now();
   console.log(name)
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage();
   await page.setContent(job.data.doc);
   const buffer = await page.pdf({
